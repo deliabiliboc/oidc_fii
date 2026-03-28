@@ -16,19 +16,19 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v4
+        uses: hashicorp/setup-terraform@v3
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v6
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           role-session-name: "GitHubActions-CloudPulse"
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # --- LINTING & SECURITY (NON-BLOCKING) jjjjjj ---
+      # --- LINTING & SECURITY (NON-BLOCKING) ---
 
       - name: Install and Run TFLint
         continue-on-error: true
@@ -36,7 +36,6 @@ jobs:
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
           tflint --init
           tflint
-
 
       - name: Install and Run tfsec
         continue-on-error: true
@@ -53,7 +52,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Validate
-        run: terraform validategi
+        run: terraform validate
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
@@ -61,8 +60,8 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
 
-      #- name: Terraform Destroy
-      # run: terraform destroy -auto-approve
+      # - name: Terraform Destroy
+      #   run: terraform destroy -auto-approve
 
       - name: 📝 Post Deployment Summary
         if: success()
