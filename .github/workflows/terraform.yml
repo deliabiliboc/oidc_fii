@@ -37,6 +37,7 @@ jobs:
           tflint --init
           tflint
 
+// comment
       - name: Install and Run tfsec
         continue-on-error: true
         run: |
